@@ -16,12 +16,13 @@ version '1.0-SNAPSHOT'
 apply plugin: 'kotlin'
 
 repositories {
-    maven {     url 'http://dl.bintray.com/kotlin/kotlin-eap-1.2' }
+    maven { url 'http://dl.bintray.com/kotlin/kotlin-eap-1.2' }
     mavenCentral()
 }
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.0"
 }
 
