@@ -1,6 +1,9 @@
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import java.net.URL
+
+const val COINDESK_API : String = "https://api.coindesk.com/v1/bpi/currentprice.json"
 
 fun main(args: Array<String>) {
     val currentPriceJSON = fetchCurrentPriceJSON()
@@ -9,7 +12,7 @@ fun main(args: Array<String>) {
 }
 
 fun fetchCurrentPriceJSON() : String {
-    val url = URL("https://api.coindesk.com/v1/bpi/currentprice.json")
+    val url = URL(COINDESK_API)
     val urlConnection = url.openConnection()
     val inputStream = urlConnection.getInputStream()
 
@@ -18,15 +21,14 @@ fun fetchCurrentPriceJSON() : String {
 }
 
 fun fetchUKTime(currentPriceJSON : String) : String {
-    val mapper = ObjectMapper().registerModule(KotlinModule())
-    val jsonNode = mapper.readTree(currentPriceJSON)
-
-    return jsonNode.get("time").get("updateduk").textValue()
+    return currentPriceNodeTree(currentPriceJSON).get("time").get("updateduk").textValue()
 }
 
 fun fetchUSD(currentPriceJSON : String) : String {
-    val mapper = ObjectMapper().registerModule(KotlinModule())
-    val jsonNode = mapper.readTree(currentPriceJSON)
+    return currentPriceNodeTree(currentPriceJSON).get("bpi").get("USD").get("rate").textValue()
+}
 
-    return jsonNode.get("bpi").get("USD").get("rate").textValue()
+fun currentPriceNodeTree(currentPriceJSON : String) : JsonNode {
+    val mapper = ObjectMapper().registerModule(KotlinModule())
+    return mapper.readTree(currentPriceJSON)
 }
